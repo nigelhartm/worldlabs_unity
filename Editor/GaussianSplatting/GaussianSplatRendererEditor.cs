@@ -162,6 +162,13 @@ namespace GaussianSplatting.Editor
             {
                 EditorGUILayout.Space();
                 GUILayout.Label("Layer Options", EditorStyles.boldLabel);
+                
+                // Initialize layer activation state list if null
+                if (gs.m_LayerActivationState == null)
+                {
+                    gs.m_LayerActivationState = new List<int2>();
+                }
+                
                 for (int i = 0; i < gs.asset.layerInfo.Count; i++)
                 {
                     if (gs.asset.layerInfo.Count > gs.m_LayerActivationState.Count)
