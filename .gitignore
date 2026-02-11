@@ -1,0 +1,15 @@
+# Unity generated
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# OS generated
+.DS_Store
+.DS_Store?
+Thumbs.db
+
+# IDE
+.idea/
+.vs/
+*.csproj
+*.sln

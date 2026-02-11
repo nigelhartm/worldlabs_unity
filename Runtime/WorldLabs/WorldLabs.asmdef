@@ -1,0 +1,16 @@
+{
+    "name": "WorldLabs",
+    "rootNamespace": "WorldLabs",
+    "references": [
+        "GaussianSplatting"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

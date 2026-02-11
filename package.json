@@ -1,0 +1,35 @@
+{
+  "name": "com.worldlabs.gaussian-splatting",
+  "displayName": "WorldLabs Gaussian Splatting",
+  "version": "1.0.0",
+  "unity": "2022.3",
+  "unityRelease": "7f1",
+  "description": "WorldLabs integration with 3D Gaussian Splatting rendering. Generate 3D scenes from text prompts using WorldLabs API and render them using Gaussian Splatting technology.",
+  "author": {
+    "name": "WorldLabs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nigelhartm/worldlabs_unity.git"
+  },
+  "dependencies": {
+    "com.unity.burst": "1.8.8",
+    "com.unity.collections": "2.1.4",
+    "com.unity.mathematics": "1.2.6"
+  },
+  "keywords": [
+    "gaussian-splatting",
+    "worldlabs",
+    "3d-generation",
+    "ai",
+    "rendering"
+  ],
+  "samples": [
+    {
+      "displayName": "Hanok Sample",
+      "description": "Example scene with a traditional Korean Hanok in spring",
+      "path": "Samples~/Hanok"
+    }
+  ]
+}
