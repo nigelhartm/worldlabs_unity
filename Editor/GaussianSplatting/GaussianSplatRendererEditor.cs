@@ -90,6 +90,37 @@ namespace GaussianSplatting.Editor
             s_AllEditors.Remove(this);
         }
 
+        private void AutoAssignResources(GaussianSplatRenderer gs)
+        {
+            Undo.RecordObject(gs, "Auto-assign Gaussian Splat Resources");
+            
+            // Find shaders by name
+            gs.m_ShaderSplats = Shader.Find("Gaussian Splatting/Render Splats");
+            gs.m_ShaderComposite = Shader.Find("Hidden/Gaussian Splatting/Composite");
+            gs.m_ShaderDebugPoints = Shader.Find("Gaussian Splatting/Debug/Render Points");
+            gs.m_ShaderDebugBoxes = Shader.Find("Gaussian Splatting/Debug/Render Boxes");
+            
+            // Find compute shaders using AssetDatabase
+            var deviceRadixGuids = AssetDatabase.FindAssets("SplatUtilities_DeviceRadixSort t:ComputeShader");
+            if (deviceRadixGuids.Length > 0)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(deviceRadixGuids[0]);
+                gs.m_CSSplatUtilities_deviceRadixSort = AssetDatabase.LoadAssetAtPath<ComputeShader>(path);
+            }
+            
+            var fidelityFxGuids = AssetDatabase.FindAssets("SplatUtilities_FidelityFX t:ComputeShader");
+            if (fidelityFxGuids.Length > 0)
+            {
+                var path = AssetDatabase.GUIDToAssetPath(fidelityFxGuids[0]);
+                gs.m_CSSplatUtilities_fidelityFX = AssetDatabase.LoadAssetAtPath<ComputeShader>(path);
+            }
+            
+            EditorUtility.SetDirty(gs);
+            serializedObject.Update();
+            
+            Debug.Log("[Gaussian Splatting] Resources auto-assigned successfully.");
+        }
+
         public override void OnInspectorGUI()
         {
             var gs = target as GaussianSplatRenderer;
@@ -167,11 +198,17 @@ namespace GaussianSplatting.Editor
                 EditorGUILayout.PropertyField(m_PropShaderDebugBoxes);
                 EditorGUILayout.PropertyField(m_PropCSSplatUtilities_deviceRadixSort);
                 EditorGUILayout.PropertyField(m_PropCSSplatUtilities_fidelityFxSort);
+                
+                EditorGUILayout.Space();
+                if (GUILayout.Button("Auto-assign Resources"))
+                {
+                    AutoAssignResources(gs);
+                }
             }
             bool validAndEnabled = gs && gs.enabled && gs.gameObject.activeInHierarchy && gs.HasValidAsset;
             if (validAndEnabled && !gs.HasValidRenderSetup)
             {
-                EditorGUILayout.HelpBox("Shader resources are not set up", MessageType.Error);
+                EditorGUILayout.HelpBox("Shader resources are not set up. Click 'Auto-assign Resources' above.", MessageType.Error);
                 validAndEnabled = false;
             }
 

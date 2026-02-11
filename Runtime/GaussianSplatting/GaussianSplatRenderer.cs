@@ -592,6 +592,16 @@ namespace GaussianSplatting.Runtime
             return (size + multipleOf - 1) / multipleOf * multipleOf;
         }
 
+        // Called when component is first added or Reset is used in Inspector
+        void Reset()
+        {
+            // Auto-assign shaders by name
+            m_ShaderSplats = Shader.Find("Gaussian Splatting/Render Splats");
+            m_ShaderComposite = Shader.Find("Hidden/Gaussian Splatting/Composite");
+            m_ShaderDebugPoints = Shader.Find("Gaussian Splatting/Debug/Render Points");
+            m_ShaderDebugBoxes = Shader.Find("Gaussian Splatting/Debug/Render Boxes");
+        }
+
         public void OnEnable()
         {
             Initialize();
