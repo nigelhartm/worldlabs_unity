@@ -31,7 +31,7 @@ The Gaussian Splatting implementation in this package is based on [UnityGaussian
 
 ## Requirements
 
-- Unity 2022.3 or later
+- Unity (only tested with 6000.2.10f1)
 - Burst 1.8.8+
 - Collections 2.1.4+
 - Mathematics 1.2.6+
