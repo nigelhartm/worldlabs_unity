@@ -83,6 +83,13 @@ namespace GaussianSplatting.Editor
             m_gpuSortType = serializedObject.FindProperty("m_gpuSortType");
             m_PropOptimizeForQuest = serializedObject.FindProperty("m_OptimizeForQuest");
             s_AllEditors.Add(this);
+            
+            // Auto-assign resources if not set
+            var gs = target as GaussianSplatRenderer;
+            if (gs != null && !gs.HasValidRenderSetup)
+            {
+                AutoAssignResources(gs);
+            }
         }
 
         public void OnDisable()
@@ -94,26 +101,23 @@ namespace GaussianSplatting.Editor
         {
             Undo.RecordObject(gs, "Auto-assign Gaussian Splat Resources");
             
-            // Find shaders by name
-            gs.m_ShaderSplats = Shader.Find("Gaussian Splatting/Render Splats");
-            gs.m_ShaderComposite = Shader.Find("Hidden/Gaussian Splatting/Composite");
-            gs.m_ShaderDebugPoints = Shader.Find("Gaussian Splatting/Debug/Render Points");
-            gs.m_ShaderDebugBoxes = Shader.Find("Gaussian Splatting/Debug/Render Boxes");
+            const string packagePath = "Packages/com.worldlabs.gaussian-splatting";
             
-            // Find compute shaders using AssetDatabase
-            var deviceRadixGuids = AssetDatabase.FindAssets("SplatUtilities_DeviceRadixSort t:ComputeShader");
-            if (deviceRadixGuids.Length > 0)
-            {
-                var path = AssetDatabase.GUIDToAssetPath(deviceRadixGuids[0]);
-                gs.m_CSSplatUtilities_deviceRadixSort = AssetDatabase.LoadAssetAtPath<ComputeShader>(path);
-            }
+            // Load shaders using absolute package paths
+            gs.m_ShaderSplats = AssetDatabase.LoadAssetAtPath<Shader>($"{packagePath}/Shaders/RenderGaussianSplats.shader");
+            gs.m_ShaderComposite = AssetDatabase.LoadAssetAtPath<Shader>($"{packagePath}/Shaders/GaussianComposite.shader");
+            gs.m_ShaderDebugPoints = AssetDatabase.LoadAssetAtPath<Shader>($"{packagePath}/Shaders/GaussianDebugRenderPoints.shader");
+            gs.m_ShaderDebugBoxes = AssetDatabase.LoadAssetAtPath<Shader>($"{packagePath}/Shaders/GaussianDebugRenderBoxes.shader");
             
-            var fidelityFxGuids = AssetDatabase.FindAssets("SplatUtilities_FidelityFX t:ComputeShader");
-            if (fidelityFxGuids.Length > 0)
-            {
-                var path = AssetDatabase.GUIDToAssetPath(fidelityFxGuids[0]);
-                gs.m_CSSplatUtilities_fidelityFX = AssetDatabase.LoadAssetAtPath<ComputeShader>(path);
-            }
+            // Load compute shaders using absolute package paths
+            gs.m_CSSplatUtilities_deviceRadixSort = AssetDatabase.LoadAssetAtPath<ComputeShader>($"{packagePath}/Shaders/SplatUtilities_DeviceRadixSort.compute");
+            gs.m_CSSplatUtilities_fidelityFX = AssetDatabase.LoadAssetAtPath<ComputeShader>($"{packagePath}/Shaders/SplatUtilities_FidelityFX.compute");
+            
+            // Fallback: try Shader.Find if AssetDatabase fails (for shaders)
+            if (gs.m_ShaderSplats == null) gs.m_ShaderSplats = Shader.Find("Gaussian Splatting/Render Splats");
+            if (gs.m_ShaderComposite == null) gs.m_ShaderComposite = Shader.Find("Hidden/Gaussian Splatting/Composite");
+            if (gs.m_ShaderDebugPoints == null) gs.m_ShaderDebugPoints = Shader.Find("Gaussian Splatting/Debug/Render Points");
+            if (gs.m_ShaderDebugBoxes == null) gs.m_ShaderDebugBoxes = Shader.Find("Gaussian Splatting/Debug/Render Boxes");
             
             EditorUtility.SetDirty(gs);
             serializedObject.Update();
