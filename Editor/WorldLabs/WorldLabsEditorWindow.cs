@@ -11,7 +11,9 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Rendering;
+#if GS_ENABLE_URP
 using UnityEngine.Rendering.Universal;
+#endif
 using WorldLabs.API;
 
 namespace WorldLabs.Editor
@@ -1802,6 +1804,7 @@ namespace WorldLabs.Editor
         
         private void EnsureGaussianSplatURPFeature()
         {
+#if GS_ENABLE_URP
             // Get the current URP pipeline asset
             var pipelineAsset = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
             if (pipelineAsset == null)
@@ -1842,8 +1845,10 @@ namespace WorldLabs.Editor
             {
                 AddGaussianSplatFeatureToRenderer(scriptableRendererData);
             }
+#endif
         }
-        
+
+#if GS_ENABLE_URP
         private void AddGaussianSplatFeatureToRenderer(ScriptableRendererData rendererData)
         {
             // Check if feature already exists
@@ -1894,6 +1899,7 @@ namespace WorldLabs.Editor
             
             Debug.Log($"[WorldLabs] Added GaussianSplatURPFeature to {rendererData.name}");
         }
+#endif
 
         #endregion
 
