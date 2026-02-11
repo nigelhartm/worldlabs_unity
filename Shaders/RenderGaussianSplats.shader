@@ -18,7 +18,7 @@ CGPROGRAM
 #pragma use_dxc
 
 #include "UnityCG.cginc"
-#include "GaussianSplatting.hlsl"
+#include "Packages/com.worldlabs.gaussian-splatting/Shaders/GaussianSplatting.hlsl"
 
 StructuredBuffer<uint> _OrderBuffer;
 

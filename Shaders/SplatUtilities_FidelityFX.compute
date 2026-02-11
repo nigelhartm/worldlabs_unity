@@ -29,8 +29,8 @@
 
 #pragma use_dxc
 
-#include "GpuSortFidelityFX.hlsl"
-#include "GaussianSplatting.hlsl"
+#include "Packages/com.worldlabs.gaussian-splatting/Shaders/GpuSortFidelityFX.hlsl"
+#include "Packages/com.worldlabs.gaussian-splatting/Shaders/GaussianSplatting.hlsl"
 #include "UnityCG.cginc"
 
 float4x4 _MatrixObjectToWorld;
@@ -597,7 +597,7 @@ float InvSigmoid(float v)
 }
 
 // SH rotation
-#include "SphericalHarmonics.hlsl"
+#include "Packages/com.worldlabs.gaussian-splatting/Shaders/SphericalHarmonics.hlsl"
 
 void RotateSH(inout SplatSHData sh, float3x3 rot)
 {

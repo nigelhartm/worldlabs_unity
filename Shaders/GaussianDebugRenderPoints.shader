@@ -16,7 +16,7 @@ CGPROGRAM
 #pragma require compute
 #pragma use_dxc
 
-#include "GaussianSplatting.hlsl"
+#include "Packages/com.worldlabs.gaussian-splatting/Shaders/GaussianSplatting.hlsl"
 
 struct v2f
 {

@@ -24,7 +24,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  ******************************************************************************/
-#include "SortCommon.hlsl"
+#include "Packages/com.worldlabs.gaussian-splatting/Shaders/SortCommon.hlsl"
 
 #define US_DIM          128U        //The number of threads in a Upsweep threadblock
 #define SCAN_DIM        128U        //The number of threads in a Scan threadblock
