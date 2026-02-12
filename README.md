@@ -89,6 +89,12 @@ If building for VR/XR:
 
 - **Runtime Loading:** The ability to load new worlds dynamically while inside the headset (runtime) is currently not supported.
 
+## Credits
+
+- **Aras Pranckevičius**
+- **Rik Turnbull**
+- **Johannes Tscharn**
+
 ## License
 
 This package is released under the MIT License.
