@@ -10,7 +10,7 @@ This package integrates the WorldLabs AI generation capabilities directly into U
 
 ## Preview
 
-https://github.com/user-attachments/assets/720c3060-17f1-47a8-9628-2c74a912d06e
+https://github.com/user-attachments/assets/13204a7d-cffc-4f7a-9c95-dfd9597af439
 
 ## Requirements
 
