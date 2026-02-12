@@ -39,7 +39,7 @@ This package requires specific project settings to function correctly, particula
 WORLDLABS_API_KEY=your_worldlabs_key
 ```
 
-4. **Troubleshooting:** If the key does not load, open **Window > WorldLabs > Settings** (or the integration window) and click **Reload API Key**.
+4. **Troubleshooting:** If the key does not load, open **WorldLabs > WorldLabsUnityIntegration > Settings** and click **Reload API Key**.
 
 ### 2. Graphics API Settings
 Ensure you are using a supported Graphics API. **D3D11 is NOT supported.**
@@ -47,7 +47,7 @@ Ensure you are using a supported Graphics API. **D3D11 is NOT supported.**
 - **Go to:** `Project Settings > Player > Other Settings > Graphics APIs`
 - **Windows:** Use **D3D12** or **Vulkan**.
 - **Mac:** Use **Metal**.
-- **Linux/Android:** Use **Vulkan**.
+- **Linux/Android (Meta Quest/ByteDance Pico):** Use **Vulkan**.
 
 > **Warning for Meta Quest Developers:** Adding a Camera Rig from "Meta Building Blocks" may automatically force your project to **D3D11**. You must manually switch it back to a supported API (D3D12/Vulkan). Ignore any warnings from the Meta Quest Project Setup Tool regarding this change.
 
