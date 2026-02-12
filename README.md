@@ -98,9 +98,5 @@ If building for VR/XR:
 ## Credits
 
 - **Aras Pranckevičius**
-- **Rik Turnbull**
 - **Johannes Tscharn**
-
-## License
-
-This package is released under the MIT License.
+- **Rik Turnbull**
