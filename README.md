@@ -2,9 +2,15 @@
 
 A Unity package for generating and rendering 3D Gaussian Splatting scenes using the WorldLabs API.
 
+## Overview
+
 This package integrates the WorldLabs AI generation capabilities directly into Unity, allowing you to generate 3D scenes from text prompts and render them in real-time.
 
 **Note:** The rendering implementation is based on [UnityGaussianSplatting](https://github.com/aras-p/UnityGaussianSplatting) but has been modified significantly for WorldLabs API integration, layer support, and custom asset workflows.
+
+## Preview
+
+https://github.com/user-attachments/assets/720c3060-17f1-47a8-9628-2c74a912d06e
 
 ## Requirements
 
