@@ -19,9 +19,9 @@ This package integrates the WorldLabs AI generation capabilities directly into U
 2. Click the `+` button and select **Add package from git URL...**
 3. Enter the following URL and click **Add**:
 
-'''
+```
 https://github.com/nigelhartm/worldlabs_unity.git
-'''
+```
 
 ### 2. Install Samples (Optional)
 To verify your setup, import the **Hanok Sample** (a traditional Korean Hanok scene) via the **Samples** tab in the Package Manager.
@@ -35,9 +35,9 @@ This package requires specific project settings to function correctly, particula
 2. Create a file named `.env` in the **root folder** of your Unity project.
 3. Add your key to the file:
 
-'''
+```
 WORLDLABS_API_KEY=your_worldlabs_key
-'''
+```
 
 4. **Troubleshooting:** If the key does not load, open **Window > WorldLabs > Settings** (or the integration window) and click **Reload API Key**.
 
