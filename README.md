@@ -71,10 +71,10 @@ If building for VR/XR:
 ## Usage
 
 ### Generating Scenes
-1. Open **Window > WorldLabs > Generator**.
-2. Enter a text prompt describing your desired scene.
+1. Open **WorldLabs > WorldLabsUnityIntergration > New World**.
+2. Enter a text prompt describing your desired scene. Or add an Image (Texture2d/URL)
 3. Click **Generate**.
-4. The system will create a `.ply` or `.splat` asset.
+4. The system will create a asset.
 
 ### Rendering Scenes
 1. Create an empty GameObject.
