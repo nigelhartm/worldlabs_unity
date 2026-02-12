@@ -4,73 +4,93 @@ A Unity package for generating and rendering 3D Gaussian Splatting scenes using 
 
 ## Overview
 
-This package combines:
-- **WorldLabs API Client** - Generate 3D scenes from text prompts using WorldLabs' AI
-- **Gaussian Splatting Renderer** - Real-time rendering of 3D Gaussian Splat assets
+This package integrates the WorldLabs AI generation capabilities directly into Unity, allowing you to generate 3D scenes from text prompts and render them in real-time.
 
-### About Gaussian Splatting
-
-The Gaussian Splatting implementation in this package is based on [UnityGaussianSplatting](https://github.com/aras-p/UnityGaussianSplatting). Due to the significant modifications and extensions required for WorldLabs integration (including splat layer support, custom asset creation workflows, and API integration), the code is kept combined in this package rather than as a separate dependency.
-
-## Installation
-
-### Via Git URL (Recommended)
-
-1. Open Unity Package Manager (`Window > Package Manager`)
-2. Click the `+` button and select "Add package from git URL..."
-3. Enter:
-   ```
-   https://github.com/nigelhartm/worldlabs_unity.git
-   ```
-4. Click Add
-
-### Manual Installation
-
-1. Download or clone this repository
-2. Copy the `Package` folder contents to your project's `Packages/com.worldlabs.gaussian-splatting` folder
+**Note:** The rendering implementation is based on [UnityGaussianSplatting](https://github.com/aras-p/UnityGaussianSplatting) but has been modified significantly for WorldLabs API integration, layer support, and custom asset workflows.
 
 ## Requirements
 
-- Unity (only tested with 6000.2.10f1)
-- Burst 1.8.8+
-- Collections 2.1.4+
-- Mathematics 1.2.6+
+- **Unity Version:** 6000.2.10f1 (Recommended/Tested)
+- **Render Pipeline:** Universal Render Pipeline (URP) is **required**.
+- **Dependencies:** Burst 1.8.8+, Collections 2.1.4+, Mathematics 1.2.6+ (installed automatically).
 
-These dependencies will be installed automatically via Package Manager.
+## Installation
 
-## Getting Started
+### 1. Install via Package Manager
+1. Open Unity and go to **Window > Package Manager**.
+2. Click the `+` button and select **Add package from git URL...**
+3. Enter the following URL and click **Add**:
 
-### 1. Configure WorldLabs API
+'''
+https://github.com/nigelhartm/worldlabs_unity.git
+'''
 
-1. Obtain an API key from [WorldLabs](https://worldlabs.ai)
-2. Create a `.env` file in your project root with:
-   ```
-   WORLDLABS_API_KEY=your_api_key_here
-   ```
+### 2. Install Samples (Optional)
+To verify your setup, import the **Hanok Sample** (a traditional Korean Hanok scene) via the **Samples** tab in the Package Manager.
 
-### 2. Open the WorldLabs Editor
+## Configuration
 
-1. Go to `Window > WorldLabs > Generator`
-2. Enter a text prompt describing your scene
-3. Click "Generate" to create a 3D Gaussian Splat scene
+This package requires specific project settings to function correctly, particularly for Mobile/XR builds.
 
-### 3. Using Gaussian Splat Assets
+### 1. API Key Setup
+1. Obtain an API key from [WorldLabs](https://worldlabs.ai).
+2. Create a file named `.env` in the **root folder** of your Unity project.
+3. Add your key to the file:
 
-1. Import a `.ply` or `.splat` file, or use WorldLabs to generate one
-2. Add a `GaussianSplatRenderer` component to a GameObject
-3. Assign your Gaussian Splat Asset
+'''
+WORLDLABS_API_KEY=your_worldlabs_key
+'''
 
-## Samples
+4. **Troubleshooting:** If the key does not load, open **Window > WorldLabs > Settings** (or the integration window) and click **Reload API Key**.
 
-Import the **Hanok Sample** via Package Manager to see an example scene with a traditional Korean Hanok in spring.
+### 2. Graphics API Settings
+Ensure you are using a supported Graphics API. **D3D11 is NOT supported.**
 
-## Render Pipeline Support
+- **Go to:** `Project Settings > Player > Other Settings > Graphics APIs`
+- **Windows:** Use **D3D12** or **Vulkan**.
+- **Mac:** Use **Metal**.
+- **Linux/Android:** Use **Vulkan**.
 
-- **Built-in Render Pipeline**: Fully supported
-- **URP (Universal Render Pipeline)**: Supported via `GaussianSplatURPFeature`
-- **HDRP (High Definition Render Pipeline)**: Supported via `GaussianSplatHDRPPass`
+> **Warning for Meta Quest Developers:** Adding a Camera Rig from "Meta Building Blocks" may automatically force your project to **D3D11**. You must manually switch it back to a supported API (D3D12/Vulkan). Ignore any warnings from the Meta Quest Project Setup Tool regarding this change.
+
+### 3. URP Renderer Configuration
+1. Locate your active URP Renderer Data asset (usually in `Assets/Settings/`).
+2. Click **Add Renderer Feature** and select **GaussianSplatURPFeature**.
+3. **Mobile/XR Settings:**
+- **Depth Texture:** On
+- **HDR:** On
+- **MSAA:** Off (Disabled)
+
+### 4. Render Graph (Crucial)
+1. Go to **Project Settings > Graphics**.
+2. **Enable** the checkbox: `Compatibility Mode (Render Graph disabled)`.
+
+### 5. XR Specifics (OpenXR)
+If building for VR/XR:
+1. Go to **Project Settings > XR Plugin Management > OpenXR**.
+2. Change the **Render Mode** from *Single Pass Instanced* to **Multi-pass**.
+
+## Usage
+
+### Generating Scenes
+1. Open **Window > WorldLabs > Generator**.
+2. Enter a text prompt describing your desired scene.
+3. Click **Generate**.
+4. The system will create a `.ply` or `.splat` asset.
+
+### Rendering Scenes
+1. Create an empty GameObject.
+2. Add the `GaussianSplatRenderer` component.
+3. Assign your generated Asset to the component.
+
+### Best Practices & Optimization
+- **Lighting:** If your splat scene is fully captured, consider removing Unity light sources (Directional Lights, etc.) to save performance, as the splats are already lit.
+- **Mobile/XR Budgets:** For standalone headsets (e.g., Quest) or mobile devices, keep models under **500k points** (Medium Quality) to ensure smooth framerates.
+
+## Known Limitations
+
+- **Runtime Loading:** The ability to load new worlds dynamically while inside the headset (runtime) is currently not supported.
 
 ## License
 
 This package is released under the MIT License.
-
