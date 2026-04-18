@@ -275,14 +275,18 @@ Import **Sensai Sample** via Package Manager to get:
 | URP | `GaussianSplatURPFeature` (add to Renderer asset) |
 | HDRP | `GaussianSplatHDRPPass` |
 
----
-
-## Acknowledgements
-
-Created as part of the [SensAI Hack](https://sensaihack.com/) — Worlds in Action, powered by [SensAI Hackademy](https://sensaihackademy.com/).
-
----
-
 ## License
 
 MIT — see [LICENSE.md](LICENSE.md)
+
+## Acknowledgements & Credits
+
+Check out our other kits:
+- [SensAI Kits](https://github.com/SensAIHackademy/SensAIKits) – context-aware AI templates  
+- [World Model Kits](https://github.com/SensAIHackademy/SensAIWorldModelKits) – WebXR, Unity, Unreal templates  
+- [PICO Kits](https://github.com/SensAIHackademy/SensAI-PICO-Kits) – world models + voice command templates  
+
+- Explore [SensAI Hacks](https://sensaihack.com) and connect with a community of creators and innovators.   
+- Visit our [Knowledge Hub](https://xrbootcamp.notion.site/SensAI-Knowledge-Hub-21f0095e34d880ec9826d9749ae56619) for curated resources.
+
+Powered by **SensAI Hackademy**
