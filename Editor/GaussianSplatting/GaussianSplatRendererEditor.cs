@@ -143,6 +143,11 @@ namespace GaussianSplatting.Editor
                     : "Gaussian Splat asset is not assigned or is empty";
                 EditorGUILayout.HelpBox(msg, MessageType.Error);
             }
+            else if (gs.HasValidRuntimeData && gs.asset == null)
+            {
+                // LiveSplatLoader bypasses the asset and uploads runtime-loaded GPU buffers directly.
+                EditorGUILayout.HelpBox("Rendering runtime-loaded splat data (e.g. LiveSplatLoader). The Data Asset field is bypassed; asset-only tools (layers, cameras, editing) are hidden.", MessageType.Info);
+            }
 
             EditorGUILayout.Space();
             GUILayout.Label("Render Options", EditorStyles.boldLabel);
@@ -158,7 +163,7 @@ namespace GaussianSplatting.Editor
             }
             EditorGUILayout.PropertyField(m_PropOptimizeForQuest);
 
-            if (gs.HasValidAsset)
+            if (gs.HasValidAsset && gs.asset != null)   // layers live on the ScriptableObject; runtime-loaded data has none
             {
                 EditorGUILayout.Space();
                 GUILayout.Label("Layer Options", EditorStyles.boldLabel);
@@ -216,7 +221,7 @@ namespace GaussianSplatting.Editor
                     AutoAssignResources(gs);
                 }
             }
-            bool validAndEnabled = gs && gs.enabled && gs.gameObject.activeInHierarchy && gs.HasValidAsset;
+            bool validAndEnabled = gs && gs.enabled && gs.gameObject.activeInHierarchy && gs.HasValidAsset && gs.asset != null;   // EditCameras/EditGUI dereference gs.asset → require a real asset, not runtime data
             if (validAndEnabled && !gs.HasValidRenderSetup)
             {
                 EditorGUILayout.HelpBox("Shader resources are not set up. Click 'Auto-assign Resources' above.", MessageType.Error);
