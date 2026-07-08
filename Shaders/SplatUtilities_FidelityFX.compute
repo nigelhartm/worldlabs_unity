@@ -188,7 +188,8 @@ bool IsSplatCutAtLayer(float3 pos, const int idx)
         included = included || (idx >= cutData.cutIndices[4] && idx < cutData.cutIndices[5]);
         included = included || (idx >= cutData.cutIndices[6] && idx < cutData.cutIndices[7]);
 
-        if (idx >= 0 && !included) continue;
+        // cutIndices[0] == -1 means no layer filter set — apply cutout to all splats
+        if (cutData.cutIndices[0] >= 0 && !included) continue;
         
         bool invert = (cutData.typeAndFlags & 0xFF00) != 0;
 

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 #if GS_ENABLE_URP
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
@@ -8,10 +9,6 @@ using UnityEngine.Rendering.Universal;
 
 namespace GaussianSplatting.Runtime
 {
-    // Note: I have no idea what is the purpose of ScriptableRendererFeature vs ScriptableRenderPass, which one of those
-    // is supposed to do resource management vs logic, etc. etc. Code below "seems to work" but I'm just fumbling along,
-    // without understanding any of it.
-    //
     // ReSharper disable once InconsistentNaming
     class GaussianSplatURPFeature : ScriptableRendererFeature
     {
@@ -24,6 +21,7 @@ namespace GaussianSplatting.Runtime
             public void Dispose()
             {
                 m_RenderTarget?.Release();
+                m_Cmb?.Dispose();
             }
 
             public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
@@ -32,22 +30,29 @@ namespace GaussianSplatting.Runtime
                 rtDesc.depthBufferBits = 0;
                 rtDesc.msaaSamples = 1;
                 rtDesc.graphicsFormat = GraphicsFormat.R16G16B16A16_SFloat;
+                rtDesc.dimension = UnityEngine.Rendering.TextureDimension.Tex2D;
+                rtDesc.volumeDepth = 1;
+                rtDesc.vrUsage = VRTextureUsage.None;
                 RenderingUtils.ReAllocateIfNeeded(ref m_RenderTarget, rtDesc, FilterMode.Point, TextureWrapMode.Clamp, name: "_GaussianSplatRT");
                 cmd.SetGlobalTexture(m_RenderTarget.name, m_RenderTarget.nameID);
 
                 ConfigureTarget(m_RenderTarget, m_Renderer.cameraDepthTargetHandle);
-                ConfigureClear(ClearFlag.Color, new Color(0,0,0,0));
+                ConfigureClear(ClearFlag.Color, new Color(0, 0, 0, 0));
             }
 
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
-                if (m_Cmb == null)
-                    return;
+                if (m_Cmb == null) return;
 
-                // add sorting, view calc and drawing commands for each splat object
-                Material matComposite = GaussianSplatRenderSystem.instance.SortAndRenderSplats(renderingData.cameraData.camera, m_Cmb);
+                var system = GaussianSplatRenderSystem.instance;
+                var cam = renderingData.cameraData.camera;
 
-                // compose
+                if (!system.GatherSplatsForCamera(cam)) return;
+
+                m_Cmb.Clear();
+                Material matComposite = system.SortAndRenderSplats(cam, m_Cmb);
+                if (matComposite == null) return;
+
                 m_Cmb.BeginSample(GaussianSplatRenderSystem.s_ProfCompose);
                 Blitter.BlitCameraTexture(m_Cmb, m_RenderTarget, m_Renderer.cameraColorTargetHandle, RenderBufferLoadAction.Load, RenderBufferStoreAction.Store, matComposite, 0);
                 m_Cmb.EndSample(GaussianSplatRenderSystem.s_ProfCompose);
@@ -55,41 +60,53 @@ namespace GaussianSplatting.Runtime
             }
         }
 
-        GSRenderPass m_Pass;
-        bool m_HasCamera;
+        readonly Dictionary<int, GSRenderPass> m_PassPerEye = new();
 
-        public override void Create()
+        GSRenderPass GetOrCreatePass(int eyeId)
         {
-            m_Pass = new GSRenderPass
+            if (!m_PassPerEye.TryGetValue(eyeId, out var pass))
             {
-                renderPassEvent = RenderPassEvent.BeforeRenderingTransparents
-            };
+                pass = new GSRenderPass
+                {
+                    renderPassEvent = RenderPassEvent.BeforeRenderingTransparents,
+                    m_Cmb = new CommandBuffer { name = $"RenderGaussianSplats_{eyeId}" }
+                };
+                m_PassPerEye[eyeId] = pass;
+            }
+            return pass;
         }
+
+        // Use multipassId (0=left, 1=right) when XR is active, camera ID otherwise
+        static int GetEyeId(in CameraData cameraData)
+        {
+            if (cameraData.xr.enabled)
+                return cameraData.xr.multipassId;
+            return cameraData.camera.GetInstanceID();
+        }
+
+        public override void Create() { }
 
         public override void OnCameraPreCull(ScriptableRenderer renderer, in CameraData cameraData)
         {
-            m_HasCamera = false;
-            var system = GaussianSplatRenderSystem.instance;
-            if (!system.GatherSplatsForCamera(cameraData.camera))
-                return;
-
-            CommandBuffer cmb = system.InitialClearCmdBuffer(cameraData.camera);
-            m_Pass.m_Cmb = cmb;
-            m_HasCamera = true;
+            if (cameraData.camera.cameraType == CameraType.Preview) return;
+            GetOrCreatePass(GetEyeId(cameraData));
         }
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
-            if (!m_HasCamera)
-                return;
-            m_Pass.m_Renderer = renderer;
-            renderer.EnqueuePass(m_Pass);
+            if (renderingData.cameraData.camera.cameraType == CameraType.Preview) return;
+
+            int eyeId = GetEyeId(renderingData.cameraData);
+            var pass = GetOrCreatePass(eyeId);
+            pass.m_Renderer = renderer;
+            renderer.EnqueuePass(pass);
         }
 
         protected override void Dispose(bool disposing)
         {
-            m_Pass?.Dispose();
-            m_Pass = null;
+            foreach (var pass in m_PassPerEye.Values)
+                pass?.Dispose();
+            m_PassPerEye.Clear();
         }
     }
 }
