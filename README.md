@@ -20,7 +20,7 @@ The Gaussian Splatting implementation is based on [UnityGaussianSplatting](https
 
 ## Requirements
 
-- **Unity Version:** 6000.2.10f1 (Recommended/Tested)
+- **Unity Version:** 6000.2.10f1 and 6000.3.14f1 (Recommended/Tested)
 - **Render Pipeline:** Universal Render Pipeline (URP) is **required**
 - **Dependencies:** Burst 1.8.8+, Collections 2.1.4+, Mathematics 1.2.6+ (installed automatically)
 
@@ -266,14 +266,6 @@ Import **Sensai Sample** via Package Manager to get:
 - **Mobile/XR:** Keep models at **500k points / Medium Quality** for smooth framerates on standalone headsets
 
 ---
-
-## Render Pipeline Support
-
-| Pipeline | Support |
-|----------|---------|
-| Built-in | Full |
-| URP | `GaussianSplatURPFeature` (add to Renderer asset) |
-| HDRP | `GaussianSplatHDRPPass` |
 
 ## License
 
